@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="Es">
+
+<head>
+    <title>DIC coffee</title>
+    <meta charset="utf-8">
+    <link href="css/nomalize.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav class="header_nav">
+            <a href="index.html" class="logo"><img src="imagenes/sample_logo_k.png"></a>
+            <ul class="global_nav">
+                <a href="index.html" class="global_nav_item">
+                    <li>Home</li>
+                </a>
+                <a class="global_nav_item">
+                    <li>Menu</li>
+                </a>
+                <a href="contacto.html" class="global_nav_item">
+                    <li>Contacto</li>
+                </a>
+            </ul>
+        </nav>
+    </header>
+    <div class="menu_key section_inner">
+    </div>
+    <section class="section_inner">
+        <div class="section_title">
+            <h1>Venta de granos de café</h1>
+        </div>
+    </section>
+
+    <section class="menu_section section_inner">
+        <div class="center">
+            <h1 class="menu_title">Póngase en fila</h1>
+        </div>
+        <ul class="menu_list cafe_menu">
+            <li class="list_cafe_item">
+                <div class="menu_cafe_content">
+                    <h2>Café mezclado</h2>
+                    <p>40.000 Gs</p>
+                </div>
+                <img src="imagenes/sample_cafe1.jpg" class="caffee_menu_image">
+            </li>
+            <li class="list_cafe_item">
+                <div class="menu_cafe_content">
+                    <h2>café con leche</h2>
+                    <p>50.000 Gs</p>
+                </div>
+                <img src="imagenes/sample_cafe2.jpg" class="caffee_menu_image">
+            </li>
+            <li class="list_cafe_item">
+                <div class="menu_cafe_content">
+                    <h2>Café con leche</h2>
+                    <p>45.000 Gs</p>
+                </div>
+                <img src="imagenes/sample_cafe3.jpg" class="caffee_menu_image">
+            </li>
+            <li class="list_cafe_item">
+                <div class="menu_cafe_content">
+                    <h2>café helado</h2>
+                    <p>35.000 Gs</p>
+                </div>
+                <img src="imagenes/sample_cafe4.jpg" class="caffee_menu_image">
+            </li>
+        </ul>
+        <h2>Orientación del franqueo</h2>
+        <ul>
+            <li>・Si el monto total es inferior a 20000 Gs, la tarifa de envío es de 5000 yenes.</li>
+            <li>・2500 Gs por compras superiores a 20000 Gs</li>
+            <li>・Gratis para compras superiores a 30000 Gs</li>
+        </ul>
+    </section>
+
+    <section class="section_inner">
+        <h2>Orden</h2>
+        <form>
+            <p>Por favor seleccione un producto</p>
+            <div>
+                <select id="product" required>
+                    <option hidden value="0">Seleccione el producto</option>
+                    <option value="15000">Mezcla Original 200g 15000Gs</option>
+                    <option value="25000">Mezcla Original 500g 25000Gs</option>
+                    <option value="20000">Mezcla Especial 200g 20000Gs</option>
+                    <option value="35000">Mezcla Especial 500g 35000Gs</option>
+                </select>
+                <p>Por favor seleccione la cantidad</p>
+                <input type="number" min="1" max="5" id="number" required>
+            </div>
+            <br>
+            <input type="button" class="btn" value="Agregar" onclick="agg()">
+            <input type="button" class="btn" value="Total" onclick="calc()">
+        </form>
+    </section>
+    <footer class="pie_pag">
+        <nav>
+            <ul class="pie_info">
+                <a href="index.html" class="global_nav_item">
+                    <li>Home</li>
+                </a>
+                <a href=" " class="pie_boton">
+                    <li>Menu</li>
+                </a>
+                <a href="contact.html" class="pie_boton">
+                    <li>contacto</li>
+                </a>
+                <a href="index.html" class="pie_boton">
+                    <li>
+                        <img src="imagenes/sample_logo_w.png" class="pie_logo">
+                    </li>
+                </a>
+            </ul>
+        </nav>
+        <p class="creditos">© DIVE INTO CODE Corp. All RIGHTS RESERVED.</p>
+    </footer>
+    <style>
+        .btn {
+            display: inline-block;
+            padding: .8rem 2rem;
+            z-index: 10;
+            text-align: center;
+            border-radius: 5px;
+            background: rgba(127, 136, 182, 1);
+            color: white;
+        }
+    </style>
+    <script>
+        const priceElement = document.getElementById("product");
+        const numberElement = document.getElementById("number");
+
+        let carrito = [];
+        function agg() {
+            const price = priceElement.value;
+            const number = numberElement.value;
+
+            let purchase = {
+                price: parseInt(price),
+                number: parseInt(number),
+            };
+
+            const newPurchase = carrito.findIndex((item) => item.price === purchase.price)
+            if (carrito.length < 1 || newPurchase === -1) {
+                carrito.push(purchase)
+            } else {
+                carrito[newPurchase].number += purchase.number
+            }
+
+            window.alert(`${display()}\n Subtotal ${subtotal()}Gs`);
+            priceElement.value = "";
+            numberElement.value = "";
+        }
+        function subtotal() {
+            return carrito.reduce((prev, purchase) => {
+                return prev + purchase.price * purchase.number;
+            }, 0)
+        }
+
+        function display() {
+            return carrito.map(purchase => {
+                return `${purchase.price} GS : ${purchase.number} Unindades\n`;
+            }).join("")
+        };
+
+        function calcPostageFromPurchase(sum) {
+            if (sum == 0 || sum >= 30000) {
+                return 0
+            } else if (sum < 20000) {
+                return 5000
+            } else {
+                return 2500
+            }
+        }
+
+        function calc() {
+            const sum = subtotal();
+            const postage = calcPostageFromPurchase(sum);
+            window.alert(`El Subtotal es ${sum}Gs, Costo de envio ${postage}Total a pagar ${sum + postage}Gs`);
+            carrito = [];
+            priceElement.value = "";
+            numberElement.value = "";
+        }
+    </script>
+</body>
+
+</html>
